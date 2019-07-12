@@ -127,7 +127,7 @@
             <div class="float-right d-none d-sm-inline">
                 Anything you want
             </div>
-            <strong>Copyright &copy; date('Y') <a href="#">Laravel Vue</a>.</strong> All rights reserved.
+            <strong>Copyright &copy; {{ date('Y') }} <a href="#">Laravel Vue</a>.</strong> All rights reserved.
         </footer>
     </div>
 
