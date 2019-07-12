@@ -30,7 +30,7 @@ class UsersController extends Controller
         $validate = $this->validate(request(), [
             'name' => 'required|string|max:255',
             'email' => 'required|email|string|max:255|unique:users',
-            'password' => 'required|string|min:8'
+            'password' => 'required|min:8'
         ]);
 
         $hash = Hash::make(request()->password, [ 'rounds' => 12 ]);
@@ -63,7 +63,18 @@ class UsersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::findOrFail($id);
+        $validate = $this->validate($request, [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|string|max:255|unique:users,email,'.$user->id,
+            'password' => 'sometimes|min:8'
+        ]);
+
+        if ($validate) {
+            $user->update($request->all());
+        }
+
+        return $user;
     }
 
     /**
