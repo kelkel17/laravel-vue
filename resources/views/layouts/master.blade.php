@@ -32,12 +32,10 @@
                         </div>
                     </div>
                 </form>
-                </nav>
-                <!-- /.navbar -->
+            </nav>
 
         <!-- Main Sidebar Container -->
         <aside class="main-sidebar sidebar-dark-primary elevation-4">
-            <!-- Brand Logo -->
             <a href="index3.html" class="brand-link">
                 <img src="/img/settings.png" alt="AdminLTE Logo" class="brand-image img-circle elevation-3"
                 style="opacity: .8">
@@ -46,7 +44,6 @@
 
             <!-- Sidebar -->
             <div class="sidebar">
-                <!-- Sidebar user panel (optional) -->
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="image">
                         <img src="/img/customer-service.png" class="img-circle elevation-2" alt="User Image">
@@ -106,19 +103,15 @@
                         </li>
                     </ul>
                 </nav>
-                <!-- /.sidebar-menu -->
             </div>
-            <!-- /.sidebar -->
         </aside>
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
-            <!-- Content Header (Page header) -->
             <div class="content-header">
                 <div class="container-fluid">
-                </div><!-- /.container-fluid -->
+                </div>
             </div>
-            <!-- /.content-header -->
 
             <!-- Main content -->
             <div class="content">
@@ -126,23 +119,17 @@
                     <router-view></router-view>
                     <vue-progress-bar></vue-progress-bar>
                 </div>
-                <!-- /.container-fluid -->
             </div>
-            <!-- /.content -->
         </div>
-    <!-- /.content-wrapper -->
 
         <!-- Main Footer -->
         <footer class="main-footer">
-            <!-- To the right -->
             <div class="float-right d-none d-sm-inline">
                 Anything you want
             </div>
-            <!-- Default to the left -->
-            <strong>Copyright &copy; 2014-2019 <a href="https://adminlte.io">AdminLTE.io</a>.</strong> All rights reserved.
+            <strong>Copyright &copy; {{ date('Y') }} <a href="#">Laravel Vue</a>.</strong> All rights reserved.
         </footer>
     </div>
-<!-- ./wrapper -->
 
 <script src="/js/app.js"></script>
 </body>

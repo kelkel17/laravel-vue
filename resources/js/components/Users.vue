@@ -14,7 +14,7 @@
                             </div>
                         </div>
 
-                        <a data-toggle="modal" data-target="#addNewModal"><i class="fas fa-user-plus text-success"></i></a>
+                        <a @click="newUserModal"><i class="fas fa-user-plus text-success"></i></a>
                     </div>
                 </div>
                 <!-- /.card-header -->
@@ -38,9 +38,10 @@
                                 <td>{{ user.role | capitalize }}</td>
                                 <td>{{ user.created_at | moment }}</td>
                                 <td>
-                                    <a href="#">
+                                    <a href="#" @click="editUserModal(user)">
                                         <i class="fa fa-edit text-warning"></i>
-                                    </a> | <a href="#" @click.prevent="deleteUser(user.id)">
+                                    </a> |
+                                    <a href="#" @click.prevent="deleteUser(user.id)">
                                         <i class="fa fa-trash text-danger"></i>
                                     </a>
                                 </td>
@@ -56,12 +57,12 @@
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
+                        <h5 class="modal-title" id="exampleModalLongTitle">{{ editMode ? 'Update User' : 'Add User' }}</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form @submit.prevent="createUser" @keydown="form.onKeydown($event)">
+                    <form @submit.prevent="editMode ? updateUser() : createUser()" @keydown="form.onKeydown($event)">
                         <div class="modal-body">
                             <div class="form-group">
                                 <label>Name</label>
@@ -94,7 +95,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                            <button :disabled="form.busy" type="submit" class="btn btn-primary">Create User</button>
+                            <button :disabled="form.busy" type="submit" class="btn btn-primary">{{ editMode ? 'Update' : 'Create User' }}</button>
                         </div>
                     </form>
                 </div>
@@ -107,8 +108,10 @@
     export default {
         data() {
             return {
+                editMode: false,
                 users: {},
                 form: new Form({
+                    id: '',
                     name: '',
                     email: '',
                     password: '',
@@ -124,30 +127,54 @@
             doMath: function (index) {
                 return parseInt(index, 10) + 1;
             },
+            newUserModal() {
+                this.editMode = false;
+                this.form.reset();
+                $('#addNewModal').modal('show');
+            },
+            editUserModal(user) {
+                this.editMode = true;
+                this.form.reset();
+                $('#addNewModal').modal('show');
+                this.form.fill(user);
+            },
+            afterRequest(data, type) {
+                this.$Progress.finish();
+                let title;
+
+                if (type == 'create') {
+                    title = `${data.name} successfully added`
+                } else {
+                    title = `${data.name}'s information has been updated successfully`
+                }
+
+                toast.fire({
+                  type: 'success',
+                  title: title
+                }).then(() => {
+                    this.$emit('loadNewUser');
+                    $('#addNewModal').modal('hide');
+                })
+            },
             createUser() {
                 this.$Progress.start();
                 this.form.post('api/user')
                     .then(({ data }) => {
-                        this.$Progress.finish();
-                        toast.fire({
-                          type: 'success',
-                          title: `${data.name} successfully added`
-                        }).then(() => {
-                            this.$emit('loadNewUser');
-                            $('#addNewModal').modal('hide');
-                            this.form.reset();
-                        })
+                        this.afterRequest(data, 'create');
                     })
                     .catch(() => {
-                        this.$Progress.finish();
-                        Swal.fire({
-                          type: 'error',
-                          title: "Something went wrong!",
-                          text: "User was not added, please try again",
-                        }).then(() => {
-                            $('#addNewModal').modal('hide');
-                        })
-                    });
+                        this.$Progress.fail();
+                    })
+            },
+            updateUser() {
+                this.$Progress.start();
+                this.form.put(`api/user/${this.form.id}`)
+                .then(({ data }) => {
+                    this.afterRequest(data, 'update');
+                })
+                .catch(() => {
+                    this.$Progress.fail();
+                })
             },
             deleteUser(id) {
                 Swal.fire({
@@ -172,7 +199,7 @@
                     .catch(() => {})
                   }
                 })
-            }
+            },
         },
         created() {
             this.loadUsers();
