@@ -11,9 +11,14 @@ let date = Vue.filter('moment', function (date) {
   return moment(date).format('MMMM Do YYYY');
 })
 
+let time = Vue.filter('time', function(time) {
+    return moment(time).format('hh:mm:ss A');
+})
+
 let filters = {
 	capitalize,
-	date
+    date,
+    time
 }
 
 export default filters

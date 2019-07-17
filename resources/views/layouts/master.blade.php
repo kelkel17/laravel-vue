@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -77,6 +76,13 @@
                                     <router-link to="/users" class="nav-link">
                                         <i class="fas fa-users nav-icon"></i>
                                         <p>Users</p>
+                                    </router-link>
+                                </li>
+
+                                <li class="nav-item">
+                                    <router-link to="/courses" class="nav-link">
+                                        <i class="fas fa-book nav-icon"></i>
+                                        <p>Content</p>
                                     </router-link>
                                 </li>
                             </ul>

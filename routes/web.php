@@ -15,7 +15,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/register/company', function () {
+    return view('admin.register');
+});
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('{path}', 'HomeController@index')->where('path', '([A-z\d\-\/_.]+)?');
+Route::post('/company/register', 'CompaniesController@store')->name('register.company');
+
