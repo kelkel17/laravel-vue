@@ -5,8 +5,10 @@
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
-                <div class="card-header">{{ __('Register') }}</div>
-
+                <div class="card-header justify-content-between d-flex">
+                    <span>{{ __('Register') }}</span>
+                    <span class="w-100 text-right"><a href="{{ url('register/company') }}">Register a Company</a></span>
+                </div>
                 <div class="card-body">
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
