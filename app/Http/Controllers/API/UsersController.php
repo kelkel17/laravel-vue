@@ -6,9 +6,14 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
+
+    // public __constructor() {
+    //     $this->middleware('auth:api');
+    // }
     /**
      * Display a listing of the resource.
      *
@@ -52,6 +57,46 @@ class UsersController extends Controller
     public function show($id)
     {
         //
+    }
+
+    public function profile()
+    {   
+        $user = auth('api')->user();
+        // $user->profile_picture =  $user->profile_picture;
+
+        return $user;
+    }
+    public function updateProfile(Request $request)
+    {
+        $user = auth('api')->user();
+
+        // Converting the Base64 encoding to a string 
+        if($request->profile_picture && !$user->profile_picture){
+            $name = time().'.' . explode('/', explode(':', substr($request->profile_picture, 0, strpos($request->profile_picture, ';')))[1])[1];
+            \Image::make($request->profile_picture)->save(public_path('img/profile/').$name);
+            $currentPhoto = $request->merge(['profile_picture' => $name]);
+            $userPhoto = public_path('img/profile/').$currentPhoto;
+
+             if(file_exists($userPhoto)){
+                $request->profile_picture = $userPhoto;
+                @unlink($userPhoto);
+            }
+
+        }else{
+            $request->profile_picture = $user->profile_picture;
+        }
+        $validate = $this->validate($request, [
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|string|max:255|unique:users,email,'.$user->id,
+            'password' => 'sometimes|min:8',
+            'profile_photo' => 'sometimes|string|mimes:jpeg,png,jpg,gif,svg|max:2048',
+        ]);
+
+        if ($validate) {
+            $user->update($request->all());
+        }
+
+       return $user;
     }
 
     /**
